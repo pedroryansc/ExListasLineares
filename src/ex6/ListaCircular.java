@@ -20,20 +20,54 @@ public class ListaCircular {
 			inicio.setProx(inicio);
 			fim = inicio;
 		} else { // Caso a lista não esteja vazia
-			if(novoNodo.getValor() <= inicio.getValor()) {
-				novoNodo.setProx(inicio);
-				inicio = novoNodo;
-				fim.setProx(inicio);
-			} else {
-				Nodo aux = inicio.getProx();
-				do {
-					if(novoNodo.getValor() <= aux.getValor()) {
-						
+			Nodo aux = inicio;
+			Nodo auxAnterior = null;
+			while(aux != null) {
+				if(aux == inicio.getProx())
+					auxAnterior = inicio;
+				
+				if(novoNodo.getValor() < aux.getValor()) {
+					if(inicio == fim || aux == inicio) {
+						novoNodo.setProx(inicio);						
+						inicio = novoNodo;
+						fim.setProx(inicio);
+						return;
+					} else {
+						novoNodo.setProx(aux);
+						auxAnterior.setProx(novoNodo);
+						return;
 					}
-					aux = aux.getProx();
-				} while(aux != inicio);
+				} else {
+					if(aux == fim) {
+						fim.setProx(novoNodo);
+						fim = novoNodo;
+						fim.setProx(inicio);
+						return;
+					}
+				}
+				aux = aux.getProx();
+				if(auxAnterior != null)
+					auxAnterior = auxAnterior.getProx();
 			}
 		}
+	}
+	
+	public static ListaCircular combinarListas(ListaCircular lista1, ListaCircular lista2) {
+		ListaCircular listaCombinada = new ListaCircular();
+		
+		Nodo aux = lista1.getInicio();
+		do {
+			listaCombinada.inserirCrescente(aux.getValor());
+			aux = aux.getProx();
+		} while(aux != lista1.getInicio());
+		
+		aux = lista2.getInicio();
+		do {
+			listaCombinada.inserirCrescente(aux.getValor());
+			aux = aux.getProx();
+		} while(aux != lista2.getInicio());
+		
+		return listaCombinada;
 	}
 	
 	public void mostrarLista() {
